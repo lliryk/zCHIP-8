@@ -95,7 +95,6 @@ pub fn main() !void {
                     };
                     if (key) |k| {
                         std.debug.print("Key {s} Down\n", .{@tagName(k)});
-                        cpu.update_keys(k, CHIP8.KeyState.Down);
                     }
                 },
                 c.SDL_KEYUP => {
@@ -120,7 +119,6 @@ pub fn main() !void {
                     };
                     if (key) |k| {
                         std.debug.print("Key {s} Up\n", .{@tagName(k)});
-                        cpu.update_keys(k, CHIP8.KeyState.Up);
                     }
                 },
                 else => {},
@@ -144,7 +142,5 @@ pub fn main() !void {
 
         _ = c.SDL_RenderCopy(renderer, texture, null, null);
         c.SDL_RenderPresent(renderer);
-
-        // std.time.sleep(16 * 1000 * 1000);
     }
 }
