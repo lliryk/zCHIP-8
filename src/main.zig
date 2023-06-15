@@ -12,7 +12,6 @@ var texture: *c.SDL_Texture = undefined;
 var cpu: *CHIP8 = undefined;
 
 pub fn init() void {
-    // FIXME: Maybe this should return an error we could `try init()` instead of panicking?
     const flags = c.SDL_INIT_VIDEO | c.SDL_INIT_EVENTS;
     if (c.SDL_Init(flags) < 0) panic("SDL Initilization Failed", .{});
 
