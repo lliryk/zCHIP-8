@@ -10,7 +10,7 @@ Chip-8 Emulator/Interpreter in Zig
 
 ## Dependancies
 - SDL2
-- Zig (0.11.0-dev.3348+3faf376b0) 
+- Zig (0.11.0-dev.3937+78eb3c561) 
 
 ### Fedora
 ```

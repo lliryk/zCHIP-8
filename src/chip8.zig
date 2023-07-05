@@ -45,7 +45,7 @@ const FontSet = [_]u8{
 };
 
 pub fn init(self: *Self) void {
-    c.srand(@intCast(c_uint, c.time(0)));
+    c.srand(@as(c_uint, @intCast(c.time(0))));
 
     self.reset();
 }
@@ -127,7 +127,7 @@ pub const KeyState = enum(u8) {
 };
 
 pub fn update_keys(self: *Self, key: Key, state: KeyState) void {
-    self.keys[@enumToInt(key)] = @enumToInt(state);
+    self.keys[@intFromEnum(key)] = @intFromEnum(state);
 }
 
 fn increment_pc(self: *Self) void {
@@ -144,7 +144,7 @@ pub fn cycle(self: *Self) bool {
     }
     self.cycle_countdown = ClockSpeedMicro;
 
-    self.opcode = @intCast(u16, self.memory[self.program_counter]) << 8 | self.memory[self.program_counter + 1];
+    self.opcode = @as(u16, @intCast(self.memory[self.program_counter])) << 8 | self.memory[self.program_counter + 1];
 
     const instr = Instr.decode(self.opcode);
     // var writer = std.io.getStdOut().writer();
@@ -166,7 +166,7 @@ pub fn cycle(self: *Self) bool {
 }
 
 fn execute(self: *Self, instr: Instr) void {
-    InstrFunctions[@enumToInt(instr.tag)](self, instr.data);
+    InstrFunctions[@intFromEnum(instr.tag)](self, instr.data);
 }
 
 const InstrFunctions = [_]*const fn (self: *Self, data: Instr.Data) void{
@@ -342,12 +342,12 @@ fn LDI(self: *Self, data: Instr.Data) void {
 }
 
 fn JMPV(self: *Self, data: Instr.Data) void {
-    self.program_counter = data.tibble.value + @intCast(u16, self.registers[0]);
+    self.program_counter = data.tibble.value + @as(u16, @intCast(self.registers[0]));
     self.increment_pc();
 }
 
 fn RND(self: *Self, data: Instr.Data) void {
-    self.registers[data.reg_dibble.x] = @intCast(u8, @rem(c.rand(), 256)) & data.reg_dibble.value;
+    self.registers[data.reg_dibble.x] = @as(u8, @intCast(@rem(c.rand(), 256))) & data.reg_dibble.value;
     self.increment_pc();
 }
 
@@ -368,7 +368,7 @@ fn DRW(self: *Self, data: Instr.Data) void {
             if (pos_x + x >= 64) {
                 break;
             }
-            const pixel = sprite_byte & (@as(u16, 0x80) >> @intCast(u4, x));
+            const pixel = sprite_byte & (@as(u16, 0x80) >> @as(u4, @intCast(x)));
 
             if (pixel != 0) {
                 var tx = (pos_x + x) % 64;
@@ -412,7 +412,7 @@ fn LDRK(self: *Self, data: Instr.Data) void {
 
     for (self.keys, 0..) |v, i| {
         if (v != 0) {
-            self.registers[data.reg.x] = @intCast(u8, i);
+            self.registers[data.reg.x] = @as(u8, @intCast(i));
             key_pressed = true;
             break;
         }

@@ -131,7 +131,7 @@ pub fn main() !void {
         var bytes: ?[*]u32 = null;
         var pitch: c_int = 0;
 
-        _ = c.SDL_LockTexture(texture, null, @ptrCast([*c]?*anyopaque, &bytes), &pitch);
+        _ = c.SDL_LockTexture(texture, null, @as([*c]?*anyopaque, @ptrCast(&bytes)), &pitch);
 
         for (cpu.graphics, 0..) |g, i| {
             bytes.?[i] = if (g == 1) 0xFFFFFFFF else 0x00000000;

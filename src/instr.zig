@@ -115,7 +115,7 @@ pub const Tag = enum(u8) {
     @"???",
 };
 
-pub const TagLength = @enumToInt(Tag.@"???") + 1;
+pub const TagLength = @intFromEnum(Tag.@"???") + 1;
 
 const Tags = [_][]const u8{
     "CLS",
@@ -199,7 +199,7 @@ test "Tag and Tags length match" {
 }
 
 pub fn get_tag(self: *const Self) []const u8 {
-    return Tags[@enumToInt(self.tag)];
+    return Tags[@intFromEnum(self.tag)];
 }
 
 pub fn get_mnemonic(self: *const Self, writer: anytype) !void {
@@ -286,7 +286,7 @@ pub fn encode(self: *Self) u16 {
         // Should we encode invalid instructions?
         // Or should the user just not blow their own foot off?
     }
-    return @bitCast(u16, self.data);
+    return @as(u16, @bitCast(self.data));
 }
 
 pub fn decode(opcode: u16) Self {
@@ -349,5 +349,5 @@ pub fn decode(opcode: u16) Self {
         else => Tag.@"???",
     };
     // Default: return invalid instruction
-    return Self{ .tag = tag, .data = @bitCast(Data, opcode) };
+    return Self{ .tag = tag, .data = @as(Data, @bitCast(opcode)) };
 }
